@@ -5,6 +5,9 @@ use infrastructure::app_setup::initialize_dependencies;
 
 mod config;
 mod infrastructure;
+mod models;
+mod repositories;
+mod services;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {

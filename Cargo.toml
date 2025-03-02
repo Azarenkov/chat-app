@@ -6,4 +6,5 @@ edition = "2021"
 [dependencies]
 dotenv = "0.15.0"
 mongodb = "3.2.1"
+serde = "1.0.218"
 tokio = "1.43.0"
