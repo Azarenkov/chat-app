@@ -5,7 +5,7 @@ use crate::{models::user::User, repositories::errors::RepositoryError};
 use super::{auth_service_abstract::AuthServiceAbstract, errors::ServiceError};
 
 #[async_trait]
-pub trait UserRepositoryAbstract {
+pub trait UserRepositoryAbstract: Send + Sync {
     async fn save(&self, user: &User) -> Result<(), RepositoryError>;
     async fn find(&self, login: &str) -> Result<(), RepositoryError>;
 }
@@ -20,6 +20,7 @@ impl AuthService {
     }
 }
 
+#[async_trait]
 impl AuthServiceAbstract for AuthService {
     async fn register(&self, user: &User) -> Result<(), ServiceError> {
         self.user_repository.find(&user.login).await?;

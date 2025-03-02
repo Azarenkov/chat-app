@@ -22,7 +22,7 @@ impl UserRepository {
 impl UserRepositoryAbstract for UserRepository {
     async fn save(&self, user: &User) -> Result<(), RepositoryError> {
         let doc = doc! {
-            "$set": {"_id": &user.login, "password": &user.password }
+            "_id": &user.login, "password": &user.password
         };
         // self.find(&user.login).await?;
         self.collection.insert_one(doc).await?;
