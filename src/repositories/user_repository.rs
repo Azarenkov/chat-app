@@ -1,3 +1,4 @@
+use async_trait::async_trait;
 use mongodb::{
     bson::{doc, to_bson, Document},
     Collection,
@@ -17,6 +18,7 @@ impl UserRepository {
     }
 }
 
+#[async_trait]
 impl UserRepositoryAbstract for UserRepository {
     async fn save(&self, user: &User) -> Result<(), RepositoryError> {
         let doc = doc! {
