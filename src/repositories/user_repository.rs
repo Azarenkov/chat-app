@@ -1,31 +1,26 @@
 use async_trait::async_trait;
-use mongodb::{
-    bson::{doc, to_bson, Document},
-    Collection,
-};
+use mongodb::{bson::doc, Collection, Database};
 
 use crate::{models::user::User, services::auth_service::UserRepositoryAbstract};
 
 use super::errors::RepositoryError;
 
 pub struct UserRepository {
-    collection: Collection<Document>,
+    collection: Collection<User>,
 }
 
 impl UserRepository {
-    pub fn new(collection: Collection<Document>) -> Self {
-        Self { collection }
+    pub fn new(database: Database) -> Self {
+        Self {
+            collection: database.collection("users"),
+        }
     }
 }
 
 #[async_trait]
 impl UserRepositoryAbstract for UserRepository {
     async fn save(&self, user: &User) -> Result<(), RepositoryError> {
-        let doc = doc! {
-            "_id": &user.login, "password": &user.password
-        };
-        // self.find(&user.login).await?;
-        self.collection.insert_one(doc).await?;
+        self.collection.insert_one(user).await?;
         Ok(())
     }
 
@@ -35,5 +30,14 @@ impl UserRepositoryAbstract for UserRepository {
             return Err(RepositoryError::UserAlreadyExists);
         }
         Ok(())
+    }
+
+    async fn get(&self, user: &User) -> Result<User, RepositoryError> {
+        let doc = self.collection.find_one(doc! {"_id": &user.login}).await?;
+
+        match doc {
+            Some(user) => Ok(user),
+            None => Err(RepositoryError::DataNotFound("User".to_string())),
+        }
     }
 }

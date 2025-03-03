@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 async-trait = "0.1.86"
 dotenv = "0.15.0"
+jsonwebtoken = "9.3.1"
 mongodb = "3.2.1"
 serde = "1.0.218"
 tokio = "1.43.0"
