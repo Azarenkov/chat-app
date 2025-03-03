@@ -1,7 +1,10 @@
 use std::error::Error;
 
+use actix_web::web::Data;
+
 use crate::{
     config::Config,
+    controllers::shared::app_state::AppState,
     repositories::user_repository::UserRepository,
     services::{auth_service::AuthService, auth_service_abstract::AuthServiceAbstract},
 };
@@ -20,4 +23,8 @@ pub async fn initialize_dependencies(config: &Config) -> Result<AppDependencies,
 
     let app_dependencies = AppDependencies { auth_service };
     Ok(app_dependencies)
+}
+
+pub fn create_app_state(auth_service: Box<dyn AuthServiceAbstract>) -> Data<AppState> {
+    AppState::new(auth_service)
 }

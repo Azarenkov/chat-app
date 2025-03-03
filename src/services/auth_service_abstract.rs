@@ -5,7 +5,7 @@ use crate::models::user::User;
 use super::errors::ServiceError;
 
 #[async_trait]
-pub trait AuthServiceAbstract {
+pub trait AuthServiceAbstract: Send + Sync {
     async fn register(&self, user: &User) -> Result<(), ServiceError>;
     async fn login(&self, user: &User) -> Result<String, ServiceError>;
 }

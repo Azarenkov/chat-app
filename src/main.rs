@@ -1,9 +1,12 @@
 use std::error::Error;
 
+use actix_web::{guard, web, App, HttpResponse, HttpServer};
 use config::Config;
-use infrastructure::app_setup::initialize_dependencies;
+use controllers::auth_controller::auth_routes;
+use infrastructure::app_setup::{create_app_state, initialize_dependencies};
 
 mod config;
+mod controllers;
 mod infrastructure;
 mod models;
 mod repositories;
@@ -14,7 +17,21 @@ async fn main() -> Result<(), Box<dyn Error>> {
     dotenv::dotenv().ok();
     let config = Config::from_env()?;
     let deps = initialize_dependencies(&config).await?;
+    let app_state = create_app_state(deps.auth_service);
 
-    println!("Hello, world!");
+    let address = format!("0.0.0.0:{}", config.port);
+    HttpServer::new(move || {
+        App::new()
+            .app_data(app_state.clone())
+            .configure(auth_routes)
+            .default_service(
+                web::route()
+                    .guard(guard::Not(guard::Get()))
+                    .to(HttpResponse::MethodNotAllowed),
+            )
+    })
+    .bind(address)?
+    .run()
+    .await?;
     Ok(())
 }
