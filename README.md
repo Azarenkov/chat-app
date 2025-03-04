@@ -6,6 +6,7 @@ It's web application with HTTP requests and Web-Sockets, it allows to register u
 - [Actix Web](https://actix.rs/)
 - [MongoDB](https://www.mongodb.com/)
 - [Docker](https://www.docker.com/)
+- [Sentry](https://sentry.io/welcome/)
 
 ## Usage
 ### Registration of user
