@@ -1,3 +1,4 @@
+[![Pipeline](https://github.com/Azarenkov/chat-app/actions/workflows/rust.yml/badge.svg?branch=main)](https://github.com/Azarenkov/chat-app/actions/workflows/rust.yml)
 [![Rust](https://img.shields.io/badge/Rust-%23000000.svg?e&logo=rust&logoColor=blue)](#)
 [![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?logo=mongodb&logoColor=white)](#)
 [![Json Web Tokens](https://img.shields.io/badge/json%20web%20tokens-323330?logo=json-web-tokens&logoColor=pink)](#)
