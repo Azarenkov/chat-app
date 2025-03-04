@@ -45,11 +45,11 @@ impl AuthServiceAbstract for AuthService {
         // self.user_repository.find(&user.login).await?;
         let db_user = self.user_repository.get(user).await?;
         if user != &db_user {
-            return Err(ServiceError::LoginError);
+            return Err(ServiceError::LoginError(user.login.to_string()));
         }
         match self.jwt_service.generate_token(&user.login) {
             Ok(token) => Ok(token),
-            Err(_) => Err(ServiceError::LoginError),
+            Err(_) => Err(ServiceError::LoginError(user.login.to_string())),
         }
     }
 }

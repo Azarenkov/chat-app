@@ -3,6 +3,7 @@ use actix_web::{
     web::{self, Data, Json},
     HttpResponse,
 };
+use sentry::{capture_message, Level};
 
 use crate::{
     controllers::shared::app_state::AppState,
@@ -19,6 +20,7 @@ async fn registration(
     app_state: Data<AppState>,
 ) -> Result<HttpResponse, ApiError> {
     app_state.auth_service.register(&user).await?;
+    capture_message(&format!("User registered: {}", user.login), Level::Info);
     Ok(HttpResponse::Ok().json("User was created"))
 }
 
@@ -26,5 +28,6 @@ async fn registration(
 async fn login(user: Json<User>, app_state: Data<AppState>) -> Result<HttpResponse, ApiError> {
     let jwt_token = app_state.auth_service.login(&user).await?;
     let response = JwtToken { token: jwt_token };
+    capture_message(&format!("User logged in: {}", user.login), Level::Info);
     Ok(HttpResponse::Ok().json(response))
 }

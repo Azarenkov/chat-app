@@ -43,7 +43,9 @@ impl MessageService {
 impl MessageServiceAbstract for MessageService {
     async fn send_message(&self, message: &Message) -> Result<(), ServiceError> {
         if self.user_repository.find(&message.recipient).await.is_ok() {
-            return Err(ServiceError::InvalidRecipient);
+            return Err(ServiceError::InvalidRecipient(
+                message.recipient.to_string(),
+            ));
         };
         self.message_repository.save(message).await?;
 
@@ -57,7 +59,7 @@ impl MessageServiceAbstract for MessageService {
     async fn validate_token(&self, token: &str) -> Result<String, ServiceError> {
         match self.jwt_service.validate_token(token) {
             Ok(login) => Ok(login),
-            Err(_) => Err(ServiceError::InvalidToken),
+            Err(_) => Err(ServiceError::InvalidToken(token.to_string())),
         }
     }
     async fn get_messages(&self, token: &str) -> Result<Vec<Message>, ServiceError> {

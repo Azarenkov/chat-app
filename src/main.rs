@@ -15,13 +15,24 @@ mod services;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     dotenv::dotenv().ok();
+
     let config = Config::from_env()?;
     let deps = initialize_dependencies(&config).await?;
     let app_state = create_app_state(deps);
 
+    let _guard = sentry::init((
+        config.sentry.clone(),
+        sentry::ClientOptions {
+            release: sentry::release_name!(),
+            ..Default::default()
+        },
+    ));
+
     let address = format!("0.0.0.0:{}", config.port);
+
     HttpServer::new(move || {
         App::new()
+            .wrap(sentry_actix::Sentry::new())
             .app_data(app_state.clone())
             .configure(auth_routes)
             .configure(message_routes)

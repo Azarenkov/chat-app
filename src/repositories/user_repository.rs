@@ -29,7 +29,7 @@ impl UserRepositoryAbstract for UserRepository {
     async fn find(&self, login: &str) -> Result<(), RepositoryError> {
         let existing_login = self.collection.find_one(doc! {"_id": login}).await?;
         if existing_login.is_some() {
-            return Err(RepositoryError::UserAlreadyExists);
+            return Err(RepositoryError::UserAlreadyExists(login.to_string()));
         }
         Ok(())
     }
@@ -39,7 +39,7 @@ impl UserRepositoryAbstract for UserRepository {
 
         match doc {
             Some(user) => Ok(user),
-            None => Err(RepositoryError::DataNotFound("User".to_string())),
+            None => Err(RepositoryError::DataNotFound(user.login.to_string())),
         }
     }
 }

@@ -5,11 +5,11 @@ use std::fmt;
 #[derive(Debug)]
 pub enum ServiceError {
     DatabaseError(String),
-    RegistrationError,
-    LoginError,
+    RegistrationError(String),
+    LoginError(String),
     InternalError,
-    InvalidToken,
-    InvalidRecipient,
+    InvalidToken(String),
+    InvalidRecipient(String),
 }
 
 impl StdError for ServiceError {}
@@ -17,12 +17,12 @@ impl StdError for ServiceError {}
 impl fmt::Display for ServiceError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            ServiceError::RegistrationError => write!(f, "User already exist"),
+            ServiceError::RegistrationError(msg) => write!(f, "User already exist: {}", msg),
             ServiceError::DatabaseError(msg) => write!(f, "Database error: {}", msg),
-            ServiceError::LoginError => write!(f, "Registration error"),
+            ServiceError::LoginError(msg) => write!(f, "Registration error: {}", msg),
             ServiceError::InternalError => write!(f, "Internal error"),
-            ServiceError::InvalidToken => write!(f, "Invalid token"),
-            ServiceError::InvalidRecipient => write!(f, "Invalid recipient"),
+            ServiceError::InvalidToken(msg) => write!(f, "Invalid token: {}", msg),
+            ServiceError::InvalidRecipient(msg) => write!(f, "Invalid recipient: {}", msg),
         }
     }
 }
@@ -30,8 +30,8 @@ impl fmt::Display for ServiceError {
 impl From<RepositoryError> for ServiceError {
     fn from(err: RepositoryError) -> Self {
         match err {
-            RepositoryError::UserAlreadyExists => ServiceError::RegistrationError,
-            RepositoryError::DataNotFound(_field) => ServiceError::LoginError,
+            RepositoryError::UserAlreadyExists(field) => ServiceError::RegistrationError(field),
+            RepositoryError::DataNotFound(field) => ServiceError::LoginError(field),
             RepositoryError::DatabaseError(e) => ServiceError::DatabaseError(e.to_string()),
             // RepositoryError::DeserializationError(e) => ServiceError::DatabaseError(e.to_string()),
             // RepositoryError::SerializationError(e) => ServiceError::DatabaseError(e.to_string()),
