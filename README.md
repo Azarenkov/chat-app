@@ -60,7 +60,7 @@ Get request
     https://saniray.kz//messages/old_messages
 
 He have to put header
-#### Authorization: Bearer <JWT token>
+Authorization: Bearer <JWT token>
 Example response:
 
     [
