@@ -45,7 +45,17 @@ impl ResponseError for ApiError {
         };
         capture_message(&self.to_string(), level);
 
-        HttpResponse::build(self.status_code()).body(self.to_string())
+        let error_response = serde_json::json!({
+            "error": self.to_string(),
+            "field": match self {
+                ApiError::BadRequest{field}=>Some(field),
+                ApiError::RegistrationError { field } => Some(field),
+                ApiError::Unauthorized { field } => Some(field),
+                ApiError::InternalServerError => None,
+            }
+        });
+
+        HttpResponse::build(self.status_code()).json(error_response)
     }
 
     fn status_code(&self) -> actix_web::http::StatusCode {
