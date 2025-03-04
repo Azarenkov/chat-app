@@ -89,7 +89,8 @@ Example response:
 
 ## Middleware
 For middleware have been chosen Sentry. There developers can find logs about all activities, which are connected with HTTP requests and websockets
-
+![sentry1](assets/sentry1.png)
+![sentry2](assets/sentry2.png)
 
 
 ## Developers
