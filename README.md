@@ -104,6 +104,10 @@ And also use this command for creating MongoDB, it will call script which will c
 
     docker-compose up -d
 
+After these actions, you can run the application
+
+    cargo run --release
+
 
 ## Developers
 Contacts

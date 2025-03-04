@@ -86,8 +86,8 @@ async fn message(
     actix_web::rt::spawn(async move {
         while let Some(msg) = stream.next().await {
             match msg {
-                Ok(AggregatedMessage::Text(text)) => {
-                    if let Ok(mut message) = serde_json::from_str::<Message>(&text) {
+                Ok(AggregatedMessage::Text(text)) => match serde_json::from_str::<Message>(&text) {
+                    Ok(mut message) => {
                         match app_state.message_service.send_message(&mut message).await {
                             Ok(()) => {
                                 capture_message(
@@ -116,11 +116,24 @@ async fn message(
                                     Level::Error,
                                 );
                             }
-                        };
-                    } else {
-                        capture_message("Failed to deserialize WebSocket message", Level::Warning);
+                        }
                     }
-                }
+                    Err(e) => {
+                        capture_message(
+                            &format!(
+                                "Failed to deserialize WebSocket message: {} - Error: {}",
+                                text, e
+                            ),
+                            Level::Warning,
+                        );
+                        let error_response = serde_json::json!({
+                            "error": "Invalid message format",
+                            "details": e.to_string()
+                        });
+                        let error_json = serde_json::to_string(&error_response).unwrap();
+                        session.text(error_json).await.unwrap_or(());
+                    }
+                },
                 Ok(AggregatedMessage::Close(_)) => {
                     app_state.web_socket_sender.unregister(&user_login).await;
                     capture_message(
