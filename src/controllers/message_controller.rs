@@ -87,8 +87,8 @@ async fn message(
         while let Some(msg) = stream.next().await {
             match msg {
                 Ok(AggregatedMessage::Text(text)) => {
-                    if let Ok(message) = serde_json::from_str::<Message>(&text) {
-                        match app_state.message_service.send_message(&message).await {
+                    if let Ok(mut message) = serde_json::from_str::<Message>(&text) {
+                        match app_state.message_service.send_message(&mut message).await {
                             Ok(()) => {
                                 capture_message(
                                     &format!(

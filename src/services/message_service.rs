@@ -1,4 +1,7 @@
-use std::sync::Arc;
+use std::{
+    sync::Arc,
+    time::{SystemTime, UNIX_EPOCH},
+};
 
 use async_trait::async_trait;
 
@@ -41,12 +44,19 @@ impl MessageService {
 
 #[async_trait]
 impl MessageServiceAbstract for MessageService {
-    async fn send_message(&self, message: &Message) -> Result<(), ServiceError> {
+    async fn send_message(&self, message: &mut Message) -> Result<(), ServiceError> {
         if self.user_repository.find(&message.recipient).await.is_ok() {
             return Err(ServiceError::InvalidRecipient(
                 message.recipient.to_string(),
             ));
         };
+
+        let unix_data = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_secs();
+        message.timestamp = Some(unix_data);
+
         self.message_repository.save(message).await?;
 
         let msg_json = serde_json::to_string(message).map_err(|_| ServiceError::InternalError)?;

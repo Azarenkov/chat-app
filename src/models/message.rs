@@ -5,5 +5,5 @@ pub struct Message {
     pub sender: String,
     pub recipient: String,
     pub content: String,
-    pub timestamp: i64,
+    pub timestamp: Option<u64>,
 }
