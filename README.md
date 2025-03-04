@@ -9,13 +9,31 @@ It's web application with HTTP requests and Web-Sockets, it allows to register u
 
 ## Usage
 ### Registration of user
+Post request
+
     https://saniray.kz/auth/registration
-with body 
+With body 
 
     {
         "login": "<Your login>",
         "password": "<Your Password>"
     }
+
+After successful registration user has opportunity to login to his account
+### Authorization of user
+Post request
+
+    https://saniray.kz/auth/login
+With body 
+
+    {
+        "login": "<Your login>",
+        "password": "<Your Password>"
+    }
+After successful authorization user will get his JWT token, which is available only during 1 hour
+
+Response
+    todo
 
 ## Developers
 Contacts
