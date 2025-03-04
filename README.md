@@ -7,6 +7,7 @@ It's web application with HTTP requests and Web-Sockets, it allows to register u
 - [MongoDB](https://www.mongodb.com/)
 - [Docker](https://www.docker.com/)
 - [Sentry](https://sentry.io/welcome/)
+- [Nginx](https://nginx.org/)
 
 ## Usage
 ### Registration of user
