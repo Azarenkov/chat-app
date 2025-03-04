@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use async_trait::async_trait;
 use mongodb::{bson::doc, Collection, Database};
 
@@ -10,7 +12,7 @@ pub struct UserRepository {
 }
 
 impl UserRepository {
-    pub fn new(database: Database) -> Self {
+    pub fn new(database: Arc<Database>) -> Self {
         Self {
             collection: database.collection("users"),
         }
@@ -25,8 +27,8 @@ impl UserRepositoryAbstract for UserRepository {
     }
 
     async fn find(&self, login: &str) -> Result<(), RepositoryError> {
-        let existing_token = self.collection.find_one(doc! {"_id": login}).await?;
-        if existing_token.is_some() {
+        let existing_login = self.collection.find_one(doc! {"_id": login}).await?;
+        if existing_login.is_some() {
             return Err(RepositoryError::UserAlreadyExists);
         }
         Ok(())

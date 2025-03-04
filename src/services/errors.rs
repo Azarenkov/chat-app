@@ -7,6 +7,9 @@ pub enum ServiceError {
     DatabaseError(String),
     RegistrationError,
     LoginError,
+    InternalError,
+    InvalidToken,
+    InvalidRecipient,
 }
 
 impl StdError for ServiceError {}
@@ -17,6 +20,9 @@ impl fmt::Display for ServiceError {
             ServiceError::RegistrationError => write!(f, "User already exist"),
             ServiceError::DatabaseError(msg) => write!(f, "Database error: {}", msg),
             ServiceError::LoginError => write!(f, "Registration error"),
+            ServiceError::InternalError => write!(f, "Internal error"),
+            ServiceError::InvalidToken => write!(f, "Invalid token"),
+            ServiceError::InvalidRecipient => write!(f, "Invalid recipient"),
         }
     }
 }

@@ -10,10 +10,13 @@ pub enum ApiError {
     RegistrationError,
 
     #[display("Invalid credentials")]
-    LoginError,
+    Unauthorized,
 
     #[display("An internal error occurred. Please try again later.")]
     InternalServerError,
+
+    #[display("Bad request: {field}")]
+    BadRequest { field: String },
 }
 
 impl From<ServiceError> for ApiError {
@@ -21,7 +24,12 @@ impl From<ServiceError> for ApiError {
         match e {
             ServiceError::DatabaseError(_e) => ApiError::InternalServerError,
             ServiceError::RegistrationError => ApiError::RegistrationError,
-            ServiceError::LoginError => ApiError::LoginError,
+            ServiceError::LoginError => ApiError::Unauthorized,
+            ServiceError::InternalError => ApiError::InternalServerError,
+            ServiceError::InvalidToken => ApiError::Unauthorized,
+            ServiceError::InvalidRecipient => ApiError::BadRequest {
+                field: ServiceError::InvalidRecipient.to_string(),
+            },
         }
     }
 }
@@ -34,8 +42,9 @@ impl ResponseError for ApiError {
     fn status_code(&self) -> actix_web::http::StatusCode {
         match self {
             ApiError::RegistrationError => StatusCode::BAD_REQUEST,
-            ApiError::LoginError => StatusCode::UNAUTHORIZED,
+            ApiError::Unauthorized => StatusCode::UNAUTHORIZED,
             ApiError::InternalServerError => StatusCode::INTERNAL_SERVER_ERROR,
+            ApiError::BadRequest { field: _ } => StatusCode::BAD_REQUEST,
         }
     }
 }

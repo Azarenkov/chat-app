@@ -4,3 +4,4 @@ pub mod errors;
 pub mod jwt_service_abstract;
 pub mod message_service;
 pub mod message_service_abstract;
+pub mod web_socket_sender_abstract;

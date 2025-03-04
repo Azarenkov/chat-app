@@ -1,6 +1,8 @@
+use std::sync::Arc;
+
 use async_trait::async_trait;
 use futures::TryStreamExt;
-use mongodb::Collection;
+use mongodb::{bson::doc, Collection, Database};
 
 use crate::{models::message::Message, services::message_service::MessageRepositoryAbstract};
 
@@ -11,8 +13,10 @@ pub struct MessageRepository {
 }
 
 impl MessageRepository {
-    pub fn new(collection: Collection<Message>) -> Self {
-        Self { collection }
+    pub fn new(database: Arc<Database>) -> Self {
+        Self {
+            collection: database.collection("messages"),
+        }
     }
 }
 
@@ -22,11 +26,14 @@ impl MessageRepositoryAbstract for MessageRepository {
         self.collection.insert_one(message).await?;
         Ok(())
     }
-    async fn get_by_recipient(&self, recipient: &str) -> Result<Vec<Message>, RepositoryError> {
-        let cursor = self
-            .collection
-            .find(mongodb::bson::doc! {"recipient": recipient})
-            .await?;
+    async fn get_by_recipient(&self, user_login: &str) -> Result<Vec<Message>, RepositoryError> {
+        let filter = doc! {
+            "$or": [
+                { "sender": user_login },
+                { "recipient": user_login }
+            ]
+        };
+        let cursor = self.collection.find(filter).await?;
         let messages: Vec<Message> = cursor.try_collect().await?;
         Ok(messages)
     }
