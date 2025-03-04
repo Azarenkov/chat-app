@@ -7,16 +7,16 @@ use crate::services::errors::ServiceError;
 
 #[derive(Debug, Serialize, Display)]
 pub enum ApiError {
-    #[display("User already exist: {field}")]
+    #[display("User already exist")]
     RegistrationError { field: String },
 
-    #[display("Invalid credentials: {field}")]
+    #[display("Invalid credentials")]
     Unauthorized { field: String },
 
     #[display("An internal error occurred. Please try again later.")]
     InternalServerError,
 
-    #[display("Bad request: {field}")]
+    #[display("Bad request")]
     BadRequest { field: String },
 }
 
