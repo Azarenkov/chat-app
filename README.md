@@ -59,8 +59,9 @@ Get request
 
     https://saniray.kz//messages/old_messages
 
-He have to put header
-Authorization: Bearer <JWT token>
+With header
+
+    Authorization: Bearer <JWT token>
 Example response:
 
     [
