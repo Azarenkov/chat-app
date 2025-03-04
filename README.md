@@ -92,6 +92,18 @@ For middleware have been chosen Sentry. There developers can find logs about all
 ![sentry1](assets/sentry1.png)
 ![sentry2](assets/sentry2.png)
 
+## Local Usage
+If you need to run this programm local, you should to create .env file in the main directory with
+
+    MONGODB_URI=mongodb://root:example@localhost:27017
+    JWT_SECRET=<Your secret words>
+    PORT=<Your port>
+    SENTRY=<Your Sentry URL>
+
+And also use this command for creating MongoDB, it will call script which will configure your database
+
+    docker-compose up -d
+
 
 ## Developers
 Contacts
