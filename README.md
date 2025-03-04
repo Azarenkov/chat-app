@@ -8,7 +8,8 @@ It's web application with HTTP requests and Web-Sockets, it allows to register u
 - [Docker](https://www.docker.com/)
 
 ## Usage
-
+### Registration of user
+  https://saniray.kz/auth/registration
 
 ## Developers
 Contacts
