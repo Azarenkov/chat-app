@@ -86,6 +86,14 @@ Example response:
         }
     ]
 
+### Errors
+During usage you can face with these errors:
+#### - RegistrationError
+#### - Unauthorized
+#### - InternalServerError
+#### - BadRequest
+
+
 
 ## Middleware
 For middleware have been chosen Sentry. There developers can find logs about all activities, which are connected with HTTP requests and websockets
