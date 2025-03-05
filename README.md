@@ -51,7 +51,7 @@ Response example:
 ### Websocket connection
 For online chatting user must indicate get request to websocket with JWT token
 
-    ws://saniray.kz/messages/ws?token=<JWT token>
+    wss://saniray.kz/messages/ws?token=<JWT token>
 
 After successfully connecting to the websocket, the user can send a message to an existing user in the database
 
