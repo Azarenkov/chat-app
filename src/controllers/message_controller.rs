@@ -67,8 +67,10 @@ async fn message(
 
     let user_login = app_state.message_service.validate_token(token).await?;
 
-    let (res, mut session, stream) =
-        handle(&req, stream).map_err(|_| ApiError::InternalServerError)?;
+    let (res, mut session, stream) = handle(&req, stream).map_err(|e| ApiError::BadRequest {
+        field: e.to_string(),
+    })?;
+
     let mut stream = stream
         .aggregate_continuations()
         .max_continuation_size(2_usize.pow(20));
@@ -82,7 +84,6 @@ async fn message(
         &format!("WebSocket connected for user: {}", user_login),
         Level::Info,
     );
-
     actix_web::rt::spawn(async move {
         while let Some(msg) = stream.next().await {
             match msg {
