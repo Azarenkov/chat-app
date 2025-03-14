@@ -21,7 +21,7 @@ It's web application with HTTP requests and Web-Sockets, it allows to register u
 ### Registration of user
 Post request
 
-    https://saniray.kz/auth/registration
+    http://localhost:8080/auth/registration
 With body 
 
     {
@@ -33,7 +33,7 @@ After successful registration user has the opportunity to login to his account
 ### Authorization of user
 Post request
 
-    https://saniray.kz/auth/login
+    http://localhost:8080/auth/login
 With body 
 
     {
@@ -51,7 +51,7 @@ Response example:
 ### Websocket connection
 For online chatting user must indicate get request to websocket with JWT token
 
-    wss://saniray.kz/messages/ws?token=<JWT token>
+    ws://localhost:8080/messages/ws?token=<JWT token>
 
 After successfully connecting to the websocket, the user can send a message to an existing user in the database
 
@@ -67,7 +67,7 @@ If the recipient is also connected to the web socket, he will receive the messag
 Also user has the opportunity to read all history of messages
 Get request
 
-    https://saniray.kz//messages/old_messages
+    http://localhost:8080/messages/old_messages
 
 With header
 
@@ -109,7 +109,7 @@ For middleware have been chosen Sentry. There developers can find logs about all
 ![sentry1](assets/sentry1.png)
 ![sentry2](assets/sentry2.png)
 
-## Local Usage
+## Deploy
 If you need to run this programm local, you should to create .env file in the main directory with
 
     MONGODB_URI=mongodb://root:example@localhost:27017
